@@ -1,17 +1,20 @@
-from flask import Flask, render_template, request, jsonify
-import random
-app = Flask(__name__)
+from flask import Flask, request, jsonify
 
-# Ruta para cargar la página principal
+#estas dos librerias sobran
+# import re
+# import random
+
+
+app = Flask(__name__)
 @app.route('/')
 def index():
-    return render_template('./index.html')
-
+    return open('./index.html').read()
+# Tu código va aquí (excepto el bucle while al final)
 import difflib
 
 # Diccionario de intenciones y respuestas
 intenciones = {
-    "¡Hola! ¿En qué puedo ayudarte?": ["Hola", "Holi", "Saludos", "Jelow", "ola", "oli"],
+    "¡Hola! ¿En qué puedo ayudarte?": ["Hola", "Holi", "Saludos", "Klk", "Jelow", "ola", "oli"],
     "Adios, un gusto haberte ayudado, si tienes alguna otra duda hazmela llegar": ["Adiós", "Hasta luego", "¡Hasta pronto!","Bye", "Ahi nos vidrios"],
     "Sal y compruebalo tu mismo :3": ["¿Cómo está el clima hoy?", "Dime cómo está el tiempo", "¿Qué tiempo hace?"],
     "Porque no revisas las UnoNoticias": ["Cuéntame las últimas noticias", "Noticias recientes", "¿Qué hay de nuevo?"],
@@ -60,16 +63,16 @@ def responder_pregunta(texto):
     intencion = get_response(texto)
     respuestas = intenciones[intencion]
     print('obtenemos respuesta')
-    return random.choice(respuestas)
+    return respuestas
 
 # Ejemplo de uso
 
-# Ruta para procesar las solicitudes de los usuarios
-@app.route('/ask', methods=['POST'])
-def ask():
-    user_message = request.json['message']
-    ai_response = responder_pregunta(user_message)
-    return jsonify({'response': ai_response})
+
+@app.route('/get-response', methods=['POST'])
+def get_bot_response():
+    user_input = request.json['message']
+    response = responder_pregunta(user_input)
+    return jsonify({'response': response})
 
 if __name__ == '__main__':
     app.run(debug=True)
